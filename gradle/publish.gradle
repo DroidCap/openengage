@@ -1,3 +1,13 @@
+// Load local.properties values as project properties
+def localPropertiesFile = project.rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    def localProperties = new Properties()
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+    localProperties.each { key, value ->
+        project.ext.set(key, value)
+    }
+}
+
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
@@ -49,9 +59,9 @@ afterEvaluate {
         repositories {
             maven {
                 name = "Sonatype"
-                // Standard URL for new Sonatype Central deployments (s01)
-                def releaseUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                def snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                // Staging API URL for new Sonatype Central Portal accounts
+                def releaseUrl = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
+                def snapshotUrl = "https://ossrh-staging-api.central.sonatype.com/content/repositories/snapshots/"
                 url = version.endsWith('SNAPSHOT') ? snapshotUrl : releaseUrl
 
                 credentials {

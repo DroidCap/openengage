@@ -16,7 +16,8 @@ class OpenEngageConfig private constructor(
     val deadTapTimeframeMs: Long,
     val excludedScreens: Set<String>,
     val maskedApiEndpoints: List<Regex>,
-    val eventFilter: ((String) -> Boolean)?
+    val eventFilter: ((String) -> Boolean)?,
+    val enableDebugLogging: Boolean
 ) {
 
     class Builder {
@@ -27,6 +28,11 @@ class OpenEngageConfig private constructor(
         private var excludedScreens: MutableSet<String> = mutableSetOf()
         private var maskedApiEndpoints: MutableList<Regex> = mutableListOf()
         private var eventFilter: ((String) -> Boolean)? = null
+        private var enableDebugLogging: Boolean = false
+
+        fun enableDebugLogging(enabled: Boolean) = apply {
+            this.enableDebugLogging = enabled
+        }
 
         fun setRageTapThreshold(taps: Int, timeframeMs: Long, radiusPx: Float = 100f) = apply {
             this.rageTapCount = taps
@@ -64,7 +70,8 @@ class OpenEngageConfig private constructor(
                 deadTapTimeframeMs = deadTapTimeframeMs,
                 excludedScreens = excludedScreens,
                 maskedApiEndpoints = maskedApiEndpoints,
-                eventFilter = eventFilter
+                eventFilter = eventFilter,
+                enableDebugLogging = enableDebugLogging
             )
         }
     }
@@ -91,6 +98,7 @@ class OpenEngageConfig private constructor(
                 parsed.dead_tap_threshold_ms?.let { builder.setDeadTapThreshold(it) }
                 parsed.excluded_screens?.let { builder.excludeScreens(it) }
                 parsed.masked_api_endpoints?.let { builder.addMaskedApiEndpoints(it) }
+                parsed.enable_debug_logging?.let { builder.enableDebugLogging(it) }
             } catch (e: IOException) {
                 // Config file not found or unreadable, using default configuration builder
             } catch (e: Exception) {
@@ -108,5 +116,6 @@ internal data class JsonConfigSchema(
     val rage_tap_count: Int? = null,
     val dead_tap_threshold_ms: Long? = null,
     val excluded_screens: List<String>? = null,
-    val masked_api_endpoints: List<String>? = null
+    val masked_api_endpoints: List<String>? = null,
+    val enable_debug_logging: Boolean? = null
 )

@@ -39,13 +39,13 @@ Import only the modules you need. If you do not use OkHttp, you can omit the okh
 ```kotlin
 dependencies {
     // 1. Core Engine (Includes configuration parsing & event logic)
-    implementation("io.github.droidcap:openengage-core:1.0.0")
+    implementation("io.github.droidcap:openengage-core:1.0.1")
 
     // 2. Gesture & Navigation Tracker (For XML Views & Compose)
-    implementation("io.github.droidcap:openengage-tracker:1.0.0")
+    implementation("io.github.droidcap:openengage-tracker:1.0.1")
 
     // 3. OkHttp Diagnostics (Optional: captures API errors & latencies)
-    implementation("io.github.droidcap:openengage-okhttp:1.0.0")
+    implementation("io.github.droidcap:openengage-okhttp:1.0.1")
 }
 ```
 
@@ -60,6 +60,7 @@ Place an `openengage.json` file inside your app's `src/main/assets/` directory. 
 
 ```json
 {
+  "enable_debug_logging": false,
   "rage_tap_count": 3,
   "rage_tap_threshold_ms": 800,
   "dead_tap_threshold_ms": 500,
@@ -96,6 +97,7 @@ class MainApplication : Application() {
         super.onCreate()
 
         val config = OpenEngageConfig.Builder()
+            .enableDebugLogging(BuildConfig.DEBUG) // Gate console logcat output
             .setRageTapThreshold(taps = 4, timeframeMs = 1000, radiusPx = 120f)
             .setDeadTapThreshold(timeframeMs = 600)
             .excludeScreens(listOf("PaymentGatewayActivity"))
@@ -237,7 +239,7 @@ If the host application uses a different version of OkHttp (e.g. `4.9.x` vs. Ope
 *   **Exclusion Option**: If your app must run a lower version and wants to bypass dependency resolution conflicts, you can explicitly exclude transitive OkHttp packaging:
     ```kotlin
     dependencies {
-        implementation("io.github.droidcap:openengage-okhttp:1.0.0") {
+        implementation("io.github.droidcap:openengage-okhttp:1.0.1") {
             exclude(group = "com.squareup.okhttp3", module = "okhttp")
         }
     }

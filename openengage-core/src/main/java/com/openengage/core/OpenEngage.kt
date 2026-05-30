@@ -54,7 +54,7 @@ object OpenEngage {
     @Synchronized
     fun initialize(context: Context, config: OpenEngageConfig? = null) {
         if (this.context != null) {
-            Log.d(TAG, "SDK already initialized.")
+            logD("SDK already initialized.")
             return
         }
         
@@ -65,7 +65,7 @@ object OpenEngage {
         // Attempt to capture Firebase Analytics instance
         try {
             firebaseAnalytics = com.google.firebase.analytics.FirebaseAnalytics.getInstance(appContext)
-            Log.i(TAG, "Successfully attached to Firebase Analytics.")
+            logI("Successfully attached to Firebase Analytics.")
         } catch (e: NoClassDefFoundError) {
             Log.w(TAG, "Firebase Analytics SDK not found. Logs will not be sent.")
         } catch (e: Exception) {
@@ -188,9 +188,21 @@ object OpenEngage {
                 }
             }
             fa.logEvent(eventToLog.name, bundle)
-            Log.d(TAG, "Sent event: ${eventToLog.name} with params: ${eventToLog.parameters}")
+            logD("Sent event: ${eventToLog.name} with params: ${eventToLog.parameters}")
         } else {
-            Log.d(TAG, "Mock logged event: ${eventToLog.name} with params: ${eventToLog.parameters}")
+            logD("Mock logged event: ${eventToLog.name} with params: ${eventToLog.parameters}")
+        }
+    }
+
+    private fun logD(message: String) {
+        if (config?.enableDebugLogging == true) {
+            Log.d(TAG, message)
+        }
+    }
+
+    private fun logI(message: String) {
+        if (config?.enableDebugLogging == true) {
+            Log.i(TAG, message)
         }
     }
 }

@@ -29,7 +29,6 @@ Add the repository (e.g., Maven Central or Jitpack) to your root `settings.gradl
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        maven { url = uri("https://jitpack.io") }
     }
 }
 ```
@@ -40,13 +39,13 @@ Import only the modules you need. If you do not use OkHttp, you can omit the okh
 ```kotlin
 dependencies {
     // 1. Core Engine (Includes configuration parsing & event logic)
-    implementation("com.github.openengage:openengage-core:1.0.0")
+    implementation("io.github.droidcap:openengage-core:1.0.0")
 
     // 2. Gesture & Navigation Tracker (For XML Views & Compose)
-    implementation("com.github.openengage:openengage-tracker:1.0.0")
+    implementation("io.github.droidcap:openengage-tracker:1.0.0")
 
     // 3. OkHttp Diagnostics (Optional: captures API errors & latencies)
-    implementation("com.github.openengage:openengage-okhttp:1.0.0")
+    implementation("io.github.droidcap:openengage-okhttp:1.0.0")
 }
 ```
 
@@ -238,7 +237,7 @@ If the host application uses a different version of OkHttp (e.g. `4.9.x` vs. Ope
 *   **Exclusion Option**: If your app must run a lower version and wants to bypass dependency resolution conflicts, you can explicitly exclude transitive OkHttp packaging:
     ```kotlin
     dependencies {
-        implementation("com.github.openengage:openengage-okhttp:1.0.0") {
+        implementation("io.github.droidcap:openengage-okhttp:1.0.0") {
             exclude(group = "com.squareup.okhttp3", module = "okhttp")
         }
     }

@@ -1,0 +1,70 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+android {
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                
+                groupId = "io.github.droidcap"
+                artifactId = project.name
+                version = "1.0.0"
+
+                pom {
+                    name = project.name
+                    description = "OpenEngage Android SDK - ${project.name} module"
+                    url = 'https://github.com/DroidCap/openengage'
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'droidcap'
+                            name = 'DroidCap'
+                            email = 'info@droidcap.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git://github.com/DroidCap/openengage.git'
+                        developerConnection = 'scm:git:ssh://github.com/DroidCap/openengage.git'
+                        url = 'https://github.com/DroidCap/openengage'
+                    }
+                }
+            }
+        }
+        
+        repositories {
+            maven {
+                name = "Sonatype"
+                // Standard URL for new Sonatype Central deployments (s01)
+                def releaseUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotUrl : releaseUrl
+
+                credentials {
+                    username = project.findProperty("mavenCentralUsername") ?: ""
+                    password = project.findProperty("mavenCentralPassword") ?: ""
+                }
+            }
+        }
+    }
+
+    signing {
+        // Skip signing for local test builds or if signing key is not provided
+        required { project.hasProperty("signing.keyId") }
+        sign publishing.publications.release
+    }
+}

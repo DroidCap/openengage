@@ -37,3 +37,5 @@ dependencies {
     // Testing
     testImplementation(libs.junit)
 }
+
+apply(from = "../gradle/publish.gradle")

@@ -31,3 +31,5 @@ dependencies {
     // Core Android components
     implementation(libs.androidx.core.ktx)
 }
+
+apply(from = "../gradle/publish.gradle")

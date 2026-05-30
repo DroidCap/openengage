@@ -48,3 +48,5 @@ dependencies {
     compileOnly(platform(libs.firebase.bom))
     compileOnly(libs.firebase.analytics.ktx)
 }
+
+apply(from = "../gradle/publish.gradle")
